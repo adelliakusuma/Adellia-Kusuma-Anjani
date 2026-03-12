@@ -1,0 +1,44 @@
+php
+
+namespace AppModels;
+
+use IlluminateDatabaseEloquentFactoriesHasFactory;
+use IlluminateDatabaseEloquentModel;
+
+ tambahan
+use IlluminateSupportFacadesDB;
+
+class Kamar extends Model
+{
+    use HasFactory;
+
+    protected $table = 'kamar';  Nama tabel eksplisit
+
+    protected $guarded = [];
+
+    public static function getKodeKamar()
+    {
+         query kode perusahaan
+        $sql = SELECT IFNULL(MAX(no_kamar), 'K000') as no_kamar 
+                FROM kamar ;
+        $kodekamar = DBselect($sql);
+
+         cacah hasilnya
+        foreach ($kodekamar as $kdkmr) {
+            $kk = $kdkmr-no_kamar;
+        }
+         Mengambil substring tiga digit akhir dari string PR-000
+        $noawal = substr($kk,-3);
+        $noakhir = $noawal+1; menambahkan 1, hasilnya adalah integer cth 1
+        $noakhir = 'K'.str_pad($noakhir,3,0,STR_PAD_LEFT); menyambung dengan string PR-001
+        return $noakhir;
+
+    }
+
+     Dengan mutator ini, setiap kali data harga_barang dikirim ke database, koma akan otomatis dihapus.
+    public function setHargaKamarAttribute($value)
+    {
+         Hapus koma (,) dari nilai sebelum menyimpannya ke database
+        $this-attributes['harga_kamar'] = str_replace('.', '', $value);
+    }
+}
